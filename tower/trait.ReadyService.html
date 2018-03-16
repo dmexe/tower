@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ReadyService` trait in crate `tower`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ReadyService">
+
+    <title>tower::ReadyService - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc trait">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Trait ReadyService</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#associated-types">Associated Types</a><div class="sidebar-links"><a href="#associatedtype.Request">Request</a><a href="#associatedtype.Response">Response</a><a href="#associatedtype.Error">Error</a><a href="#associatedtype.Future">Future</a></div><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.call">call</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>tower</a></p><script>window.sidebarCurrent = {name: 'ReadyService', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>tower</a>::<wbr><a class="trait" href=''>ReadyService</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/tower/lib.rs.html#219-234' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait ReadyService {
+    type <a href='#associatedtype.Request' class="type">Request</a>;
+    type <a href='#associatedtype.Response' class="type">Response</a>;
+    type <a href='#associatedtype.Error' class="type">Error</a>;
+    type <a href='#associatedtype.Future' class="type">Future</a>: <a class="trait" href="https://docs.rs/futures/0.1/futures/future/trait.Future.html" title="trait futures::future::Future">Future</a>&lt;Item = Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Response" title="type tower::ReadyService::Response">Response</a>, Error = Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Error" title="type tower::ReadyService::Error">Error</a>&gt;;
+    fn <a href='#tymethod.call' class='fnname'>call</a>(&amp;mut self, req: Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Request" title="type tower::ReadyService::Request">Request</a>) -&gt; Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Future" title="type tower::ReadyService::Future">Future</a>;
+}</pre><div class='docblock'><p>An asynchronous function from <code>Request</code> to a <code>Response</code> that is always ready
+to process a request.</p>
+
+<p><code>ReadyService</code> is similar to <code>Service</code>, except that it is always able to
+accept a request. This request may either complete successfully or resolve
+to an error, i.e., <code>ReadyService</code> implementations may handle out of capacity
+situations by returning a response future that immediately resolves to an
+error.</p>
+
+<p>The <code>Service</code> trait should be prefered over this one. <code>ReadyService</code> should
+only be used in situations where there is no way to handle back pressure.
+When usin a <code>ReadyService</code> implementation, back pressure needs to be handled
+via some other strategy, such as limiting the total number of in flight
+requests.</p>
+
+<p>One situation in which there is no way to handle back pressure is routing.
+A router service receives inbound requests and dispatches them to one of N
+inner services. In this case, one of the inner services may become &quot;not
+ready&quot; while the others remain ready. It would not be ideal for the router
+service to flag itself as &quot;not ready&quot; when only one of the inner services is
+not ready, but there is no way for the router to communicate to the caller
+which requests will be accepted and which will be rejected. The router
+service will implement <code>ReadyService</code>, indicating to the user that they are
+responsible for handling back pressure via some other strategy.</p>
+</div>
+            <h2 id='associated-types' class='small-section-header'>
+              Associated Types<a href='#associated-types' class='anchor'></a>
+            </h2>
+            <div class='methods'>
+        <h3 id='associatedtype.Request' class='method'><span id='Request.t' class='invisible'><code>type <a href='#associatedtype.Request' class="type">Request</a></code></span></h3><div class='docblock'><p>Requests handled by the service.</p>
+</div><h3 id='associatedtype.Response' class='method'><span id='Response.t' class='invisible'><code>type <a href='#associatedtype.Response' class="type">Response</a></code></span></h3><div class='docblock'><p>Responses returned by the service.</p>
+</div><h3 id='associatedtype.Error' class='method'><span id='Error.t' class='invisible'><code>type <a href='#associatedtype.Error' class="type">Error</a></code></span></h3><div class='docblock'><p>Errors produced by the service.</p>
+</div><h3 id='associatedtype.Future' class='method'><span id='Future.t' class='invisible'><code>type <a href='#associatedtype.Future' class="type">Future</a>: <a class="trait" href="https://docs.rs/futures/0.1/futures/future/trait.Future.html" title="trait futures::future::Future">Future</a>&lt;Item = Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Response" title="type tower::ReadyService::Response">Response</a>, Error = Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Error" title="type tower::ReadyService::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>The future response value.</p>
+</div></div>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
+            <div class='methods'>
+        <h3 id='tymethod.call' class='method'><span id='call.v' class='invisible'><code>fn <a href='#tymethod.call' class='fnname'>call</a>(&amp;mut self, req: Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Request" title="type tower::ReadyService::Request">Request</a>) -&gt; Self::<a class="type" href="../tower/trait.ReadyService.html#associatedtype.Future" title="type tower::ReadyService::Future">Future</a></code></span></h3><div class='docblock'><p>Process the request and return the response asynchronously.</p>
+</div></div>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
+        <ul class='item-list' id='implementors-list'>
+    </ul><script type="text/javascript" async
+                         src="../implementors/tower/trait.ReadyService.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "tower";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

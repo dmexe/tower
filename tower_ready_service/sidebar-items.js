@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["ReadyService","An asynchronous function from `Request` to a `Response` that is always ready to process a request."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Ready","Future yielding a `Service` once the service is ready to process a request"]],"trait":[["NewService","Creates new `Service` values."],["ReadyService","An asynchronous function from `Request` to a `Response` that is always ready to process a request."],["Service","An asynchronous function from `Request` to a `Response`."]]});
