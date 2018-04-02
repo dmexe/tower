@@ -28,6 +28,7 @@ members = [
   "tower-rate-limit",
   "tower-ready-service",
   "tower-reconnect",
+  "tower-retry",
   "tower-router",
   "tower-timeout",
   "tower-util",

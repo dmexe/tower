@@ -1,0 +1,10 @@
+[package]
+name = "tower-retry"
+version = "0.1.0"
+authors = ["Dmitry Galinsky <dima@dmexe.me>"]
+publish = false
+
+[dependencies]
+log = "0.4.1"
+futures = "0.1"
+tower = { version = "0.1", path = "../" }
